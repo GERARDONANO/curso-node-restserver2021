@@ -1,6 +1,7 @@
-
 // obtener ayuda vs code
 const { response, request } = require('express');
+
+const User = require('../models/user');
 
 const usersGet = ( req, res = response ) => {
 
@@ -24,13 +25,25 @@ const usersPut = ( req, res = response ) => {
     });
 }
 
-const usersPost = ( req, res = response ) => {
+const usersPost = async ( req, res = response ) => {
 
-    const { nombre } = req.body;
+    const body = req.body;
+
+    const user = new User( body );
+
+    try {
+
+        await user.save();
+        
+    } catch (error) {
+        throw new Error('error al guardar registro en base de datos')
+    }
+
+    
 
     res.json({
         message : 'post API - Controller',
-        nombre
+        user
     });
 }
 
